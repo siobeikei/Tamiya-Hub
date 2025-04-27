@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamiya Hub</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .close-btn {
+      background: red;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .friends-list, .suggestion-section {
+      margin-top: 20px;
+    }
+    .friend, .suggestion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .friend img, .suggestion img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+    .friend-name, .suggestion-name {
+      font-weight: bold;
+      flex-grow: 1;
+    }
+    .add-btn {
+      background-color: #3b82f6;
+      color: white;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .add-btn:hover {
+      background-color: #2563eb;
+      transform: scale(1.05);
+    }
+    .sent-btn {
+      background-color: gray;
+      color: white;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: default;
+      pointer-events: none;
+    }
+    .message-box {
+      margin-top: 1rem;
+    }
+    .message-box input {
+      width: 80%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .message-box button {
+      background-color: #3b82f6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- Top Banner -->
+  <div class="bg-blue-700 text-white px-6 flex items-center justify-between py-4">
+    <div class="flex items-center">
+      <img src="C:\Users\keira\Desktop\Tamiya-HUb\images\tamiyahublogo.png" alt="Tamiya Hub Logo" class="h-[150px] w-[150px] object-contain mr-6">
+    </div>
+    <div class="flex space-x-4 items-center">
+      <button id="addFriendsButton" class="bg-green-600 hover:bg-green-500 hover:scale-105 transform transition text-white text-sm px-4 py-2 rounded shadow">Add Friends</button>
+      <button id="chatButton" class="bg-purple-600 hover:bg-purple-500 hover:scale-105 transform transition text-white text-sm px-4 py-2 rounded shadow">Chat</button>
+      <button id="notificationsButton" class="bg-yellow-500 hover:bg-yellow-400 hover:scale-105 transform transition text-white text-sm px-4 py-2 rounded shadow">Notifications</button>
+    </div>
+  </div>
+
+  <div class="min-h-screen p-6">
+    <div class="max-w-5xl mx-auto text-center py-12">
+      <h1 class="text-4xl font-bold mb-4 text-blue-700">Welcome to Tamiya Hub</h1>
+      <p class="text-lg text-gray-600 mb-8">
+        Your social destination for all things Tamiya Mini 4WD. Connect, share, and chat with fellow enthusiasts!
+      </p>
+
+      <!-- News Feed -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
+          <video controls class="w-full h-auto">
+            <source src="C:\Users\keira\Desktop\Tamiya-HUb\videos\tamiyarace.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="p-4 text-left flex-1 flex flex-col justify-between">
+            <div>
+              <h2 class="text-lg font-semibold">Race Highlights</h2>
+              <p class="text-sm text-gray-600">Check out this awesome Tamiya Mini 4WD race from last weekend!</p>
+            </div>
+            <div class="mt-4 flex space-x-4">
+              <button class="text-blue-600 hover:underline">👍 Like</button>
+              <button class="text-red-600 hover:underline">👎 Dislike</button>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
+          <video controls class="w-full h-auto">
+            <source src="C:\Users\keira\Desktop\Tamiya-HUb\videos\tamiyabuild.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="p-4 text-left flex-1 flex flex-col justify-between">
+            <div>
+              <h2 class="text-lg font-semibold">Build of the Week</h2>
+              <p class="text-sm text-gray-600">Take a look at this custom-built Tamiya car that’s blowing minds in the community.</p>
+            </div>
+            <div class="mt-4 flex space-x-4">
+              <button class="text-blue-600 hover:underline">👍 Like</button>
+              <button class="text-red-600 hover:underline">👎 Dislike</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Chat -->
+   <div id="chatModal" class="modal fixed inset-0 bg-black bg-opacity-50 justify-center items-center z-50 hidden flex">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-xl font-semibold">Chat</h3>
+        <button id="closeChat" class="close-btn">Close</button>
+      </div>
+      <div class="friends-list">
+        <h4 class="text-lg font-bold mb-2">Friends</h4>
+        <ul>
+          <li>Nelzen</li>
+          <li>Poland</li>
+          <li>Karen Maria</li>
+        </ul>
+      </div>
+      <div class="friends-list">
+        <h4 class="text-lg font-bold mt-4 mb-2">Active Friends</h4>
+        <ul>
+          <li>Jervin</li>
+          <li>Jhaniel</li>
+        </ul>
+      </div>
+      <div class="mt-4">
+        <h4 class="font-semibold">Poland:</h4>
+        <p class="bg-gray-200 p-2 rounded">Tol sali ka sa race sa SanJuan?</p>
+        <h4 class="font-semibold mt-2">You:</h4>
+        <p class="bg-blue-200 p-2 rounded">Titignan pa tol, depende pag may budget nyahaha</p>
+      </div>
+      <div class="message-box">
+        <input id="chatInput" type="text" placeholder="Type your message...">
+        <button id="sendMessage">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Friends -->
+  <div id="addFriendsModal" class="modal fixed inset-0 bg-black bg-opacity-50 justify-center items-center z-50 hidden flex">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-xl font-semibold">Add Friends</h3>
+        <button id="closeAddFriends" class="close-btn">Close</button>
+      </div>
+      <div class="suggestion-section">
+        <h4 class="font-semibold">Mutual Friends</h4>
+        <div class="suggestion"><img src="C:\Users\keira\Desktop\Tamiya-HUb\images\russel.png"><span class="suggestion-name">Russel</span><button class="add-btn">Add</button></div>
+        <div class="suggestion"><img src="C:\Users\keira\Desktop\Tamiya-HUb\images\denielle.png"><span class="suggestion-name">Denielle</span><button class="add-btn">Add</button></div>
+      </div>
+      <div class="suggestion-section">
+        <h4 class="font-semibold">Near You</h4>
+        <div class="suggestion"><img src="C:\Users\keira\Desktop\Tamiya-HUb\images\jamir.png"><span class="suggestion-name">Jamir</span><button class="add-btn">Add</button></div>
+      </div>
+      <div class="suggestion-section">
+        <h4 class="font-semibold">Most Engaged Members</h4>
+        <div class="suggestion"><img src="C:\Users\keira\Desktop\Tamiya-HUb\images\mevin.png"><span class="suggestion-name">Mevin</span><button class="add-btn">Add</button></div>
+        <div class="suggestion"><img src="C:\Users\keira\Desktop\Tamiya-HUb\images\tiffany.png"><span class="suggestion-name">Tiffany</span><button class="add-btn">Add</button></div>
+      </div>
+    </div>
+  </div>
+
+<!-- Notifications -->
+<div id="notificationsModal" class="modal fixed inset-0 bg-black bg-opacity-50 justify-center items-center z-50 hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="text-xl font-semibold">Notifications</h3>
+      <button id="closeNotifications" class="close-btn">Close</button>
+    </div>
+    <ul class="mt-4 space-y-4">
+      <li class="bg-gray-100 p-3 rounded">
+        <strong>Poland</strong> posted a new build video. <span class="text-sm text-gray-500">36 likes</span>
+      </li>
+      <li class="bg-gray-100 p-3 rounded">
+        <strong>Karen Maria</strong> shared highlights from the recent race. <span class="text-sm text-gray-500">42 likes</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  const chatButton = document.getElementById('chatButton');
+  const chatModal = document.getElementById('chatModal');
+  const closeChat = document.getElementById('closeChat');
+  const addFriendsButton = document.getElementById('addFriendsButton');
+  const addFriendsModal = document.getElementById('addFriendsModal');
+  const closeAddFriends = document.getElementById('closeAddFriends');
+  const notificationsButton = document.getElementById('notificationsButton');
+  const notificationsModal = document.getElementById('notificationsModal');
+  const closeNotifications = document.getElementById('closeNotifications');
+  const sendMessageButton = document.getElementById('sendMessage');
+  const chatInput = document.getElementById('chatInput');
+
+  chatButton.addEventListener('click', () => chatModal.classList.remove('hidden'));
+  closeChat.addEventListener('click', () => chatModal.classList.add('hidden'));
+  addFriendsButton.addEventListener('click', () => addFriendsModal.classList.remove('hidden'));
+  closeAddFriends.addEventListener('click', () => addFriendsModal.classList.add('hidden'));
+  notificationsButton.addEventListener('click', () => notificationsModal.classList.remove('hidden'));
+  closeNotifications.addEventListener('click', () => notificationsModal.classList.add('hidden'));
+
+  window.addEventListener('click', (event) => {
+    if (event.target === chatModal) chatModal.classList.add('hidden');
+    if (event.target === addFriendsModal) addFriendsModal.classList.add('hidden');
+    if (event.target === notificationsModal) notificationsModal.classList.add('hidden');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.add-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        alert('Friend request sent');
+        button.textContent = 'Sent';
+        button.classList.remove('add-btn');
+        button.classList.add('sent-btn');
+      });
+    });
+  });
+
+  sendMessageButton.addEventListener('click', () => {
+    const message = chatInput.value.trim();
+    if (message) {
+      const p = document.createElement('p');
+      p.textContent = message;
+      p.className = 'bg-blue-200 p-2 rounded mt-2';
+      chatInput.parentNode.insertBefore(p, chatInput);
+      chatInput.value = '';
+    }
+  });
+</script>
+</body>
+</html>
